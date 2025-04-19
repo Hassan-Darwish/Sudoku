@@ -21,7 +21,11 @@ class SudokuBoardValueOutOfBoundsException : public SudokuBoardException
 public:
     const char* what() const noexcept override;
 };
-
+class SudokuBoardNotEmptyBlockException : public SudokuBoardException
+{
+public:
+    const char* what() const noexcept override;
+};
 class SudokuBoard
 {
 private:
@@ -63,5 +67,9 @@ public:
     *  Description: checks if the move is legal to make or not
     */
     bool isGameRuleValid(int row, int col, int value) const;
+
+    std::vector<std::vector<int>> getMatrix() const;
+
+    void setMatrix(const std::vector<std::vector<int>>& mat);
 
 };

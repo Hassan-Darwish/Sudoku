@@ -114,14 +114,15 @@ void SudokuGame::handleMove(void)
 void SudokuGame::handleSolve(void)
 {
     SudokuSolver solver;
-    if (solver.solve(board)) 
-    {
-        std::cout << "Puzzle solved!\n";
+    try {
+        if (solver.solve(board)) {
+            std::cout << "🎉 Puzzle solved successfully!\n";
+        } else {
+            std::cout << "❌ This puzzle cannot be solved.\n";
+        }
+    } catch (const SudokuBoardException& e) {
+        std::cout << "Solver Error: " << e.what() << std::endl;
     } 
-    else 
-    {
-        std::cout << "This puzzle cannot be solved.\n";
-    }
 }
 void SudokuGame::handleExit(void)
 {

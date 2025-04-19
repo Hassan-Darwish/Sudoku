@@ -1,51 +1,54 @@
 #include "SudokuSolver.hpp"
-#include <cmath>
 
 bool SudokuSolver::solve(SudokuBoard& board) {
-    return solveRecursive(board, 0, 0);
-}
+    std::vector<std::vector<int>> mat = board.getMatrix(); // new method below
+    bool solved = solveSudokuRec(mat, 0, 0);
 
-bool SudokuSolver::solveRecursive(SudokuBoard& board, int row, int col) {
-    const int N = 9;
-
-    if (row == N) return true;
-
-    if (board.getCell(row, col) != 0) {
-        if (col == N - 1) return solveRecursive(board, row + 1, 0);
-        else return solveRecursive(board, row, col + 1);
+    if (solved) {
+        board.setMatrix(mat); // new method below
     }
 
-    for (int val = 1; val <= 9; val++) {
-        if (isFeasible(board, row, col, val)) {
-            board.setCell(row, col, val);
-            if (col == N - 1) {
-                if (solveRecursive(board, row + 1, 0)) return true;
-            } else {
-                if (solveRecursive(board, row, col + 1)) return true;
-            }
-            board.setCell(row, col, 0); // Backtrack
+    return solved;
+}
+
+bool SudokuSolver::solveSudokuRec(std::vector<std::vector<int>>& mat, int row, int col) {
+    int n = mat.size();
+
+    if (row == n - 1 && col == n)
+        return true;
+
+    if (col == n) {
+        row++;
+        col = 0;
+    }
+
+    if (mat[row][col] != 0)
+        return solveSudokuRec(mat, row, col + 1);
+
+    for (int num = 1; num <= n; num++) {
+        if (isSafe(mat, row, col, num)) {
+            mat[row][col] = num;
+            if (solveSudokuRec(mat, row, col + 1))
+                return true;
+            mat[row][col] = 0;
         }
     }
 
     return false;
 }
 
-bool SudokuSolver::isFeasible(const SudokuBoard& board, int row, int col, int value) const {
-    int boxRow = (row / 3) * 3;
-    int boxCol = (col / 3) * 3;
+bool SudokuSolver::isSafe(const std::vector<std::vector<int>>& mat, int row, int col, int num) {
+    for (int x = 0; x < 9; x++) {
+        if (mat[row][x] == num || mat[x][col] == num)
+            return false;
+    }
 
-    // Row
-    for (int i = 0; i < 9; ++i)
-        if (board.getCell(row, i) == value) return false;
-
-    // Column
-    for (int i = 0; i < 9; ++i)
-        if (board.getCell(i, col) == value) return false;
-
-    // 3x3 box
-    for (int i = 0; i < 3; ++i)
-        for (int j = 0; j < 3; ++j)
-            if (board.getCell(boxRow + i, boxCol + j) == value) return false;
+    int startRow = row - row % 3;
+    int startCol = col - col % 3;
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
+            if (mat[startRow + i][startCol + j] == num)
+                return false;
 
     return true;
 }

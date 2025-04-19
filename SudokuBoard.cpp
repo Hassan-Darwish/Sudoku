@@ -18,6 +18,10 @@ const char* SudokuBoardValueOutOfBoundsException::what() const noexcept
 {
     return "Invalid Move (Value Out of Bounds Exception).";
 }
+const char* SudokuBoardNotEmptyBlockException::what() const noexcept
+{
+    return "Invalid Move (Block Not Empty Exception).";
+}
 
 /*
 *  Description: SudokuBoard class constructor which initialize the board values
@@ -129,7 +133,7 @@ bool SudokuBoard::isCellEmpty(int row, int col) const
 {
     if(board[row-1][col-1])
     {
-        return false;
+        throw SudokuBoardNotEmptyBlockException();
     }
     return true;
 }
@@ -175,4 +179,11 @@ bool SudokuBoard::isGameRuleValid(int row, int col, int value) const
     }
 
     return true;
+}
+std::vector<std::vector<int>> SudokuBoard::getMatrix() const {
+    return board;
+}
+
+void SudokuBoard::setMatrix(const std::vector<std::vector<int>>& mat) {
+    board = mat;
 }

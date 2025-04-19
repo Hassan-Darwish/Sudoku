@@ -1,15 +1,12 @@
 #pragma once
 #include "SudokuBoard.hpp"
+#include <vector>
 
 class SudokuSolver {
 public:
-    // Entry point to solving
     bool solve(SudokuBoard& board);
 
 private:
-    // Internal recursive solver
-    bool solveRecursive(SudokuBoard& board, int row, int col);
-    
-    // Feasibility check (row, col, 3x3 box)
-    bool isFeasible(const SudokuBoard& board, int row, int col, int value) const;
+    bool solveSudokuRec(std::vector<std::vector<int>>& mat, int row, int col);
+    bool isSafe(const std::vector<std::vector<int>>& mat, int row, int col, int num);
 };
