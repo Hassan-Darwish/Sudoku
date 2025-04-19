@@ -81,16 +81,12 @@ void SudokuBoard::printBoard(void) const
 */
 bool SudokuBoard::isInBound(int row, int col) const
 {
-    if( row > 9 || row < 1 || 
-        col > 9 || col < 1)
+    if( row > 8 || row < 0 || 
+        col > 8 || col < 0)
    {
        throw SudokuBoardOutOfBoundsException();
-       return false;
    }
-   else
-   {
-       return true;
-   }
+   return true;
 }
 bool SudokuBoard::isValueInBound(int row, int col, int value) const
 {
@@ -100,8 +96,8 @@ bool SudokuBoard::isValueInBound(int row, int col, int value) const
        !(SudokuBoard::isCellEmpty(row, col)))
     {
         throw SudokuBoardValueOutOfBoundsException();
-        return false;
     }
+    return true;
 }
 
 /*
@@ -135,10 +131,7 @@ bool SudokuBoard::isCellEmpty(int row, int col) const
     {
         return false;
     }
-    else
-    {
-        return true;
-    }
+    return true;
 }
 
 /*
@@ -183,4 +176,3 @@ bool SudokuBoard::isGameRuleValid(int row, int col, int value) const
 
     return true;
 }
-
