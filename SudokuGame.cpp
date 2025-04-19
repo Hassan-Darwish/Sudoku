@@ -166,6 +166,7 @@ void SudokuGame::handleSolve(void)
     } catch (const SudokuBoardException& e) {
         std::cout << "Solver Error: " << e.what() << std::endl;
     } 
+    SudokuGame::handleExit();
 }
 
 /* Exits the game loop */
