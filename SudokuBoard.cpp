@@ -155,6 +155,7 @@ int SudokuBoard::getCell(int row, int col) const
     {
         return board[row-1][col-1];
     }
+    return -1;
 }
 
 /*
@@ -224,6 +225,23 @@ std::vector<std::vector<int>> SudokuBoard::getMatrix() const {
  */
 void SudokuBoard::setMatrix(const std::vector<std::vector<int>>& mat) {
     board = mat;
+}
+/* 
+ * checks if the player won 
+ */
+bool SudokuBoard::isGameOver(void) const
+{
+    for (int outerLoopIndex = 0; outerLoopIndex < board.size(); outerLoopIndex++)
+    {
+        for (int innerLoopIndex = 0; innerLoopIndex < board[outerLoopIndex].size(); innerLoopIndex++)
+        {
+            if(board[outerLoopIndex][innerLoopIndex] == 0)
+            {
+                return false;
+            }
+        }
+    } 
+    return true;
 }
 
 /******************************************************************************

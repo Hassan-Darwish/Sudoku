@@ -78,7 +78,10 @@ void SudokuGame::run(void)
             default:
             break;
         }
-
+    }
+    if(board.isGameOver())
+    {
+        isRunning = false;
     }
 }
 
@@ -142,9 +145,9 @@ void SudokuGame::handleMove(void)
     {
         board.setCell(row,col,value);
     }
-    catch(const SudokuGameException& gameError)
+    catch(const SudokuBoardException& boardError)
     {
-        std::cerr << gameError.what() << std::endl;
+        std::cerr << boardError.what() << std::endl;
         SudokuGame::promptContinue();
         SudokuGame::handleMove();
     }
