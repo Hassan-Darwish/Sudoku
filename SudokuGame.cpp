@@ -1,19 +1,48 @@
+/******************************************************************************
+ *  MODULE NAME  : SudokuGame
+ *  FILE         : SudokuGame.cpp
+ *  DESCRIPTION  : Source file implementing the SudokuGame class methods and
+ *                 exception definitions for handling game operations and input.
+ *  AUTHOR       : Hassan Darwish
+ *  DATE CREATED : April 2025
+ ******************************************************************************/
+
+/*==============================================================================
+ *  INCLUDES
+ *============================================================================*/
 #include "SudokuGame.hpp"
 #include "SudokuSolver.hpp"
 #include <iostream>
 #include <limits>
 
+/*==============================================================================
+ *  EXCEPTION DEFINITIONS
+ *============================================================================*/
+
+/* Returns generic game error message */
 const char* SudokuGameException::what() const noexcept
 {
     return "General Game Exception.";
 }
+
+/* Returns specific error message for invalid input */
 const char* SudokuGameInvalidInputException::what() const noexcept
 {
     return "Invalid User Input Exception.";
 }
 
+/*==============================================================================
+ *  CONSTRUCTOR
+ *============================================================================*/
+
+/* Initializes the SudokuGame with the running flag set to true */
 SudokuGame::SudokuGame() : isRunning(true) {}
 
+/*==============================================================================
+ *  PUBLIC FUNCTION DEFINITIONS
+ *============================================================================*/
+
+/* Main game loop: handles menu display, user choice, and dispatch */
 void SudokuGame::run(void)
 {
     while(isRunning)
@@ -52,6 +81,8 @@ void SudokuGame::run(void)
 
     }
 }
+
+/* Displays the main game menu options */
 void SudokuGame::displayMenu(void) const
 {
     std::cout 
@@ -60,6 +91,8 @@ void SudokuGame::displayMenu(void) const
     << "3) Exit\n"
     << std::endl;
 }
+
+/* Reads and returns user menu choice, throws on invalid input */
 int SudokuGame::getUserChoice(void) const
 {
     int userChoice;
@@ -68,11 +101,15 @@ int SudokuGame::getUserChoice(void) const
     if (std::cin.fail()) {throw SudokuGameInvalidInputException();}
     return userChoice;
 }
+
+/* Clears the input stream of invalid entries */
 void SudokuGame::clearInput(void) const
 {
     std::cin.clear();
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
+
+/* Prompts the user to press Enter to continue */
 void SudokuGame::promptContinue(void) const
 {
     std::cout << "\nPress Enter to continue...";
@@ -80,6 +117,7 @@ void SudokuGame::promptContinue(void) const
     std::cin.get(); // wait for Enter 
 }
 
+/* Reads and validates a user's move, applies it to the board */
 void SudokuGame::handleMove(void)
 {
     int row, col, value;
@@ -104,27 +142,35 @@ void SudokuGame::handleMove(void)
     {
         board.setCell(row,col,value);
     }
-    catch(const SudokuBoardException& boardError)
+    catch(const SudokuGameException& gameError)
     {
-        std::cerr << boardError.what() << std::endl;
+        std::cerr << gameError.what() << std::endl;
         SudokuGame::promptContinue();
         SudokuGame::handleMove();
     }
 }
+
+/* Attempts to automatically solve the Sudoku puzzle */
 void SudokuGame::handleSolve(void)
 {
     SudokuSolver solver;
     try {
         if (solver.solve(board)) {
-            std::cout << "🎉 Puzzle solved successfully!\n";
+            std::cout << "Puzzle solved successfully!\n";
         } else {
-            std::cout << "❌ This puzzle cannot be solved.\n";
+            std::cout << "This puzzle cannot be solved.\n";
         }
     } catch (const SudokuBoardException& e) {
         std::cout << "Solver Error: " << e.what() << std::endl;
     } 
 }
+
+/* Exits the game loop */
 void SudokuGame::handleExit(void)
 {
     isRunning = false;
 }
+
+/******************************************************************************
+ *  END OF FILE
+ ******************************************************************************/

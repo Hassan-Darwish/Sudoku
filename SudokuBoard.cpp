@@ -1,31 +1,61 @@
+/******************************************************************************
+ *  MODULE NAME  : Sudoku Board
+ *  FILE         : SudokuBoard.cpp
+ *  DESCRIPTION  : This file implements the SudokuBoard class which handles
+ *                 board representation, validation, and manipulation. It also
+ *                 defines board-related exceptions.
+ *  AUTHOR       : Hassan Darwish
+ *  DATE CREATED : April 2025
+ ******************************************************************************/
+
+/*==============================================================================
+ *  INCLUDES
+ *============================================================================*/
 #include "SudokuBoard.hpp"
 #include <iostream>
 #include <exception>
 
+/*==============================================================================
+ *  EXCEPTION DEFINITIONS
+ *============================================================================*/
+
+/* General board exception message */
 const char* SudokuBoardException::what() const noexcept
 {
     return "Invalid Board Exception.";
 }
+
+/* Thrown when cell position is outside 1-9 range */
 const char* SudokuBoardOutOfBoundsException::what() const noexcept 
 {
     return "Invalid Move (Out of Bounds Exception).";
 }
+
+/* Thrown when move violates Sudoku rules */
 const char* SudokuBoardGameRuleException::what() const noexcept
 {
     return "Invalid Move (Game Rule Exception).";
 }
+
+/* Thrown when inserted value is outside allowed range */
 const char* SudokuBoardValueOutOfBoundsException::what() const noexcept
 {
     return "Invalid Move (Value Out of Bounds Exception).";
 }
+
+/* Thrown when trying to overwrite a non-empty cell */
 const char* SudokuBoardNotEmptyBlockException::what() const noexcept
 {
     return "Invalid Move (Block Not Empty Exception).";
 }
 
+/*==============================================================================
+ *  FUNCTION DEFINITIONS
+ *============================================================================*/
+
 /*
-*  Description: SudokuBoard class constructor which initialize the board values
-*/
+ * Constructor: Initializes the Sudoku board with a preset puzzle
+ */
 SudokuBoard::SudokuBoard()
 {
     board = {
@@ -44,13 +74,12 @@ SudokuBoard::SudokuBoard()
 }
 
 /*
-*  Description: prints the 9x9 sudoku board values
-*/
+ * Prints the Sudoku board to the console
+ */
 void SudokuBoard::printBoard(void) const
 {
     for(int outerLoopIndex = 0; outerLoopIndex < board.size(); outerLoopIndex++)
     {
-        
         if(outerLoopIndex % 3 == 0)
         {
             std::cout << std::endl << "-------------------------------------" << std::endl;
@@ -60,16 +89,15 @@ void SudokuBoard::printBoard(void) const
             std::cout << std::endl;
         }
 
-
         for(int innerLoopIndex = 0; innerLoopIndex < board[outerLoopIndex].size(); innerLoopIndex++)
         {
-            if(board[outerLoopIndex][innerLoopIndex])// print number if not equal 0
+            if(board[outerLoopIndex][innerLoopIndex])
             {
                 std::cout << board[outerLoopIndex][innerLoopIndex] << " ";
             }
             else
             {
-                std::cout << "." << " "; // if equal 0 replace with dot
+                std::cout << "." << " ";
             }
             if((innerLoopIndex + 1) % 3 == 0)
             {
@@ -81,8 +109,8 @@ void SudokuBoard::printBoard(void) const
 }
 
 /*
-*  Description: checks if the move is in bounds to make or not ie (1-9)
-*/
+ * Validates if row and column are within [1-9] bounds
+ */
 bool SudokuBoard::isInBound(int row, int col) const
 {
     if( row > 9 || row < 1 || 
@@ -92,9 +120,12 @@ bool SudokuBoard::isInBound(int row, int col) const
    }
    return true;
 }
+
+/*
+ * Validates if value and cell coordinates are within bounds and cell is empty
+ */
 bool SudokuBoard::isValueInBound(int row, int col, int value) const
 {
-    
     if(value > 9 || value < 1 || 
        !(SudokuBoard::isInBound(row, col)) ||
        !(SudokuBoard::isCellEmpty(row, col)))
@@ -105,8 +136,8 @@ bool SudokuBoard::isValueInBound(int row, int col, int value) const
 }
 
 /*
-*  Description: used to manipulate the value of the current cell
-*/
+ * Attempts to place a value in the specified cell after validations
+ */
 void SudokuBoard::setCell(int row, int col, int value)
 {
     if(SudokuBoard::isValueInBound(row, col, value) && SudokuBoard::isGameRuleValid(row, col, value))
@@ -116,8 +147,8 @@ void SudokuBoard::setCell(int row, int col, int value)
 }
 
 /*
-*  Description: used to track the value of the current cell
-*/
+ * Retrieves the value at a specific board cell
+ */
 int SudokuBoard::getCell(int row, int col) const
 {
     if(SudokuBoard::isInBound(row, col))
@@ -127,8 +158,8 @@ int SudokuBoard::getCell(int row, int col) const
 }
 
 /*
-*  Description: checks if cell is empty or not
-*/
+ * Checks whether a cell is empty (contains 0)
+ */
 bool SudokuBoard::isCellEmpty(int row, int col) const
 {
     if(board[row-1][col-1])
@@ -139,8 +170,8 @@ bool SudokuBoard::isCellEmpty(int row, int col) const
 }
 
 /*
-*  Description: checks if the move is legal to make or not
-*/
+ * Ensures that placing a value does not violate Sudoku rules
+ */
 bool SudokuBoard::isGameRuleValid(int row, int col, int value) const
 {
     SudokuBoard::isValueInBound(row, col, value);
@@ -180,10 +211,21 @@ bool SudokuBoard::isGameRuleValid(int row, int col, int value) const
 
     return true;
 }
+
+/*
+ * Returns the full board matrix
+ */
 std::vector<std::vector<int>> SudokuBoard::getMatrix() const {
     return board;
 }
 
+/*
+ * Sets the full board matrix (used by solver)
+ */
 void SudokuBoard::setMatrix(const std::vector<std::vector<int>>& mat) {
     board = mat;
 }
+
+/******************************************************************************
+ *  END OF FILE
+ ******************************************************************************/
