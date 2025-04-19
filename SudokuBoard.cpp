@@ -71,9 +71,9 @@ void SudokuBoard::printBoard(void) const
             {
                 std:: cout << " |";
             }
-        }
-        
+        } 
     }
+    std::cout << std::endl;
 }
 
 /*
@@ -81,8 +81,8 @@ void SudokuBoard::printBoard(void) const
 */
 bool SudokuBoard::isInBound(int row, int col) const
 {
-    if( row > 8 || row < 0 || 
-        col > 8 || col < 0)
+    if( row > 9 || row < 1 || 
+        col > 9 || col < 1)
    {
        throw SudokuBoardOutOfBoundsException();
    }
@@ -105,9 +105,9 @@ bool SudokuBoard::isValueInBound(int row, int col, int value) const
 */
 void SudokuBoard::setCell(int row, int col, int value)
 {
-    if(SudokuBoard::isValueInBound(row, col, value))
+    if(SudokuBoard::isValueInBound(row, col, value) && SudokuBoard::isGameRuleValid(row, col, value))
     {
-        board[row][col] = value;
+        board[row-1][col-1] = value;
     }
 }
 
@@ -118,7 +118,7 @@ int SudokuBoard::getCell(int row, int col) const
 {
     if(SudokuBoard::isInBound(row, col))
     {
-        return board[row][col];
+        return board[row-1][col-1];
     }
 }
 
@@ -127,7 +127,7 @@ int SudokuBoard::getCell(int row, int col) const
 */
 bool SudokuBoard::isCellEmpty(int row, int col) const
 {
-    if(board[row][col])
+    if(board[row-1][col-1])
     {
         return false;
     }
@@ -159,7 +159,7 @@ bool SudokuBoard::isGameRuleValid(int row, int col, int value) const
     // Check column
     for (int rowLoopIndex = 0; rowLoopIndex < board.size(); rowLoopIndex++)
     {
-        if (board[rowLoopIndex][col] == value)
+        if (board[rowLoopIndex][col-1] == value)
         {
             throw SudokuBoardGameRuleException();
         }
@@ -168,7 +168,7 @@ bool SudokuBoard::isGameRuleValid(int row, int col, int value) const
     // Check row
     for (int colLoopIndex = 0; colLoopIndex < board.size(); colLoopIndex++)
     {
-        if (board[row][colLoopIndex] == value)
+        if (board[row-1][colLoopIndex] == value)
         {
             throw SudokuBoardGameRuleException();
         }
