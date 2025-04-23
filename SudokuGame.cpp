@@ -113,12 +113,11 @@ void SudokuGame::clearInput(void) const
 }
 
 /* Prompts the user to press Enter to continue */
-void SudokuGame::promptContinue(void) const
+char SudokuGame::promptContinue(void) const
 {
     SudokuGame::clearInput();
-    std::cout << "\nPress Enter to continue...";
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // flush leftovers
-    std::cin.get(); // wait for Enter 
+    std::cout << "\nPress Enter to continue... or q to quit :";
+    return std::cin.get(); // wait for Enter 
 }
 
 /* Reads and validates a user's move, applies it to the board */
@@ -153,7 +152,11 @@ void SudokuGame::handleMove(void)
         catch(const SudokuBoardException& boardError)
         {
             std::cerr << boardError.what() << std::endl;
-            SudokuGame::promptContinue();
+
+            if(SudokuGame::promptContinue() == 'q')
+            {
+                break;
+            }
             board.printBoard();
             std::cout << "\nEnter row (1-9), column (1-9), and value (1-9): ";
         }

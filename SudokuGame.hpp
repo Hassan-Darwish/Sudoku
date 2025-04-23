@@ -68,7 +68,7 @@
      void clearInput(void) const;
  
      /* Prompts the user to press enter to continue */
-     void promptContinue(void) const;
+     char promptContinue(void) const;
  
      /* Handles user's move input and updates the board */
      void handleMove(void);
