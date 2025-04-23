@@ -78,6 +78,9 @@
  
      /* Exits the game loop and ends the session */
      void handleExit(void);
+     
+     /* checks if the player won */ 
+     bool isGameOver(void) const;
  };
  
  /******************************************************************************

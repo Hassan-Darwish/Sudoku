@@ -139,11 +139,6 @@
       *  Description: Sets the board to the provided matrix
       */
      void setMatrix(const std::vector<std::vector<int>>& mat);
-     
-     /* 
-     * checks if the player won 
-     */
-     bool isGameOver(void) const;
  };
  
  /******************************************************************************

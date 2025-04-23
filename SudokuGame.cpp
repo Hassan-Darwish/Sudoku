@@ -79,9 +79,9 @@ void SudokuGame::run(void)
             break;
         }
     }
-    if(board.isGameOver())
+    if(SudokuGame::isGameOver())
     {
-        isRunning = false;
+        SudokuGame::handleExit();
     }
 }
 
@@ -109,12 +109,13 @@ int SudokuGame::getUserChoice(void) const
 void SudokuGame::clearInput(void) const
 {
     std::cin.clear();
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // flush leftovers
 }
 
 /* Prompts the user to press Enter to continue */
 void SudokuGame::promptContinue(void) const
 {
+    SudokuGame::clearInput();
     std::cout << "\nPress Enter to continue...";
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // flush leftovers
     std::cin.get(); // wait for Enter 
@@ -126,30 +127,36 @@ void SudokuGame::handleMove(void)
     int row, col, value;
 
     std::cout << "Enter row (1-9), column (1-9), and value (1-9): ";
-    std::cin >> row;
-    if(std::cin.fail())
+
+    while(true)
     {
-        throw SudokuGameInvalidInputException();
-    }
-    std::cin >> col;
-    if(std::cin.fail())
-    {
-        throw SudokuGameInvalidInputException();
-    }
-    std::cin >> value;
-    if(std::cin.fail())
-    {
-        throw SudokuGameInvalidInputException();
-    }
-    try 
-    {
-        board.setCell(row,col,value);
-    }
-    catch(const SudokuBoardException& boardError)
-    {
-        std::cerr << boardError.what() << std::endl;
-        SudokuGame::promptContinue();
-        SudokuGame::handleMove();
+        try 
+        {
+            std::cin >> row;
+            if(std::cin.fail())
+            {
+                throw SudokuGameInvalidInputException();
+            }
+            std::cin >> col;
+            if(std::cin.fail())
+            {
+                throw SudokuGameInvalidInputException();
+            }
+            std::cin >> value;
+            if(std::cin.fail())
+            {
+                throw SudokuGameInvalidInputException();
+            }
+
+                board.setCell(row,col,value);
+            }
+        catch(const SudokuBoardException& boardError)
+        {
+            std::cerr << boardError.what() << std::endl;
+            SudokuGame::promptContinue();
+            board.printBoard();
+            std::cout << "\nEnter row (1-9), column (1-9), and value (1-9): ";
+        }
     }
 }
 
@@ -166,6 +173,7 @@ void SudokuGame::handleSolve(void)
     } catch (const SudokuBoardException& e) {
         std::cout << "Solver Error: " << e.what() << std::endl;
     } 
+    board.printBoard();
     SudokuGame::handleExit();
 }
 
@@ -175,6 +183,23 @@ void SudokuGame::handleExit(void)
     isRunning = false;
 }
 
+/* 
+ * checks if the player won 
+ */
+bool SudokuGame::isGameOver(void) const
+{
+    for (int outerLoopIndex = 1; outerLoopIndex <= 9; outerLoopIndex++)
+    {
+        for (int innerLoopIndex = 1; innerLoopIndex <= 9; innerLoopIndex++)
+        {
+            if(board.getCell(outerLoopIndex,innerLoopIndex) == 0)
+            {
+                return false;
+            }
+        }
+    } 
+    return true;
+}
 /******************************************************************************
  *  END OF FILE
  ******************************************************************************/

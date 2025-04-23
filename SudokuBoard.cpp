@@ -177,8 +177,8 @@ bool SudokuBoard::isGameRuleValid(int row, int col, int value) const
 {
     SudokuBoard::isValueInBound(row, col, value);
 
-    int startRow = (row / 3) * 3;
-    int startCol = (col / 3) * 3;
+    int startRow = row - row % 3;
+    int startCol = col - col % 3;
 
     // Check 3x3 subgrid
     for (int outerLoopIndex = 0; outerLoopIndex < 3; outerLoopIndex++)
@@ -225,23 +225,6 @@ std::vector<std::vector<int>> SudokuBoard::getMatrix() const {
  */
 void SudokuBoard::setMatrix(const std::vector<std::vector<int>>& mat) {
     board = mat;
-}
-/* 
- * checks if the player won 
- */
-bool SudokuBoard::isGameOver(void) const
-{
-    for (int outerLoopIndex = 0; outerLoopIndex < board.size(); outerLoopIndex++)
-    {
-        for (int innerLoopIndex = 0; innerLoopIndex < board[outerLoopIndex].size(); innerLoopIndex++)
-        {
-            if(board[outerLoopIndex][innerLoopIndex] == 0)
-            {
-                return false;
-            }
-        }
-    } 
-    return true;
 }
 
 /******************************************************************************

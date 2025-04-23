@@ -24,7 +24,7 @@ int main(void)
 
     game.run();
 
-    std::cout << "Thanks for playing." << std::endl;
+    std::cout << "\nThanks for playing." << std::endl;
 }
 
 /******************************************************************************
