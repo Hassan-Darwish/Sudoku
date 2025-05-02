@@ -11,7 +11,6 @@ The Sudoku Game project is a console-based implementation of the popular Sudoku 
 * Game loop with menu interaction
 * Custom exception system for input and game rule errors
 * Backtracking-based Sudoku solver
-* Load and save puzzles to/from `.txt` files
 * Modular code structure with separate classes for board, solver, and game management
 
 ## Menu Options
